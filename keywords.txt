@@ -1,0 +1,58 @@
+#######################################
+# Syntax Coloring Map For DFRobot_Biometric
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+DFRobot_Biometric	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin	KEYWORD2
+enrollUser	KEYWORD2
+getAllNumsFaceUserIDs	KEYWORD2
+getAllNumsPalmUserIDs	KEYWORD2
+getRecognitionResult	KEYWORD2
+deleteUser	KEYWORD2
+deleteAllUser  KEYWORD2
+LEDcolor  KEYWORD2
+calculateChecksum  KEYWORD2
+waitForReply  KEYWORD2
+
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+COLOR_BLACK	LITERAL1
+COLOR_NAVY	LITERAL1
+COLOR_DGREEN	LITERAL1
+COLOR_DCYAN	LITERAL1
+COLOR_PURPLE	LITERAL1
+COLOR_MAROON	LITERAL1
+COLOR_OLIVE	LITERAL1   
+COLOR_LGRAY	LITERAL1
+COLOR_DGRAY	LITERAL1
+COLOR_BLUE	LITERAL1
+COLOR_GREEN	LITERAL1
+COLOR_CYAN	LITERAL1
+COLOR_RED	LITERAL1   
+COLOR_MAGENTA	LITERAL1
+COLOR_YELLOW	LITERAL1     
+COLOR_WHITE	LITERAL1
+eNormalPower	LITERAL1
+eLowPower	LITERAL1
+eNormalSpeed	LITERAL1
+eHighSpeed	LITERAL1
+eLowPrecision	LITERAL1
+eNomalPrecision	LITERAL1
+eHighPrecision	LITERAL1
+eUltraPrecision	LITERAL1

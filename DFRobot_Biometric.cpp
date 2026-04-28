@@ -24,10 +24,7 @@ bool DFRobot_Biometric::begin(void)
   uint16_t bufLen      = 0;
   uint8_t  buffer[250] = { 0 };
   calculateChecksum(data, 6);
-  while (_serial.available()) {
-    _serial.read();
-  }
-  _serial.write(data, 6);
+  writeCmd(data,6);
   state = waitForReply(buffer, bufLen, 1000);
   if (state == true) {
     if (buffer[7] == 0) {
@@ -55,17 +52,11 @@ int16_t DFRobot_Biometric::getAllNumsFaceUserIDs(void)
   int16_t  nums        = 0;
   uint8_t  buffer[250] = { 0 };
   calculateChecksum(data, 7);
-  while (_serial.available()) {
-    _serial.read();
-  }
-  _serial.write(data, 7);
+  writeCmd(data,7);
   state = waitForReply(buffer, bufLen, 1000);
   if (state == true) {
     nums = buffer[7] * 256 + buffer[8];
     return nums;
-  }
-  while (_serial.available()) {
-    _serial.read();
   }
   return -1;
 }
@@ -78,17 +69,11 @@ int16_t DFRobot_Biometric::getAllNumsPalmUserIDs(void)
   int16_t  nums        = 0;
   uint8_t  buffer[250] = { 0 };
   calculateChecksum(data, 7);
-  while (_serial.available()) {
-    _serial.read();
-  }
-  _serial.write(data, 7);
+  writeCmd(data,7);
   state = waitForReply(buffer, bufLen, 1000);
   if (state == true) {
     nums = buffer[7] * 256 + buffer[8];
     return nums;
-  }
-  while (_serial.available()) {
-    _serial.read();
   }
   return -1;
 }
@@ -124,6 +109,7 @@ bool DFRobot_Biometric::waitForReply(uint8_t* buffer, uint16_t& bufLen, uint16_t
         } else if (bufLen == (5 + recmdLen)) {
           calculateChecksum(buffer, bufLen + 1);
           if (recData == buffer[bufLen]) {
+            serialEmpty();
             return true;
           }
         }
@@ -154,10 +140,7 @@ uint8_t DFRobot_Biometric::enrollUser(uint8_t kind)
   data[43] = 0x00;
   data[44] = 0x00;
   calculateChecksum(data, 46);
-  while (_serial.available()) {
-    _serial.read();
-  }
-  _serial.write(data, 46);
+  writeCmd(data,46);
   state = waitForReply(buffer, bufLen, 11000);
   if (state == true) {
     if (buffer[6] == 0x00) {
@@ -167,9 +150,6 @@ uint8_t DFRobot_Biometric::enrollUser(uint8_t kind)
     } else if (buffer[6] == 0x0D) {
       return 3;
     }
-  }
-  while (_serial.available()) {
-    _serial.read();
   }
   return 0;
 }
@@ -193,10 +173,7 @@ uint8_t DFRobot_Biometric::deleteUser(uint16_t id)    //能够成功删除指定
   data[5] = id / 256;
   data[6] = id % 256;
   calculateChecksum(data, 9);
-  while (_serial.available()) {
-    _serial.read();
-  }
-  _serial.write(data, 9);
+  writeCmd(data,9);
   state = waitForReply(buffer, bufLen, 11000);
   if (state == true) {
     if (buffer[6] == 0x00) {
@@ -204,9 +181,6 @@ uint8_t DFRobot_Biometric::deleteUser(uint16_t id)    //能够成功删除指定
     } else if (buffer[6] == 0x08) {
       return 2;
     }
-  }
-  while (_serial.available()) {
-    _serial.read();
   }
   return 0;
 }
@@ -223,10 +197,7 @@ uint8_t DFRobot_Biometric::deleteAllUser(void)    //??选择范围删除时，�
   data[8]              = 0x00;
   data[9]              = 0x00;
   calculateChecksum(data, 11);
-  while (_serial.available()) {
-    _serial.read();
-  }
-  _serial.write(data, 11);
+  writeCmd(data,11);
   state = waitForReply(buffer, bufLen, 5000);
   if (state == true) {
     if (buffer[6] == 0x00) {
@@ -234,9 +205,6 @@ uint8_t DFRobot_Biometric::deleteAllUser(void)    //??选择范围删除时，�
     } else if (buffer[6] == 0x05) {
       return 2;
     }
-  }
-  while (_serial.available()) {
-    _serial.read();
   }
   return 0;
 }
@@ -248,10 +216,7 @@ void DFRobot_Biometric::getRecognitionResult(sId_t* ID)
   uint16_t bufLen      = 0;
   bool     state       = false;
   calculateChecksum(data, 8);
-  while (_serial.available()) {
-    _serial.read();
-  }
-  _serial.write(data, 8);
+  writeCmd(data,8);
   state = waitForReply(buffer, bufLen, 5000);
   if (state == true) {
     if (buffer[6] == 0 && ((buffer[42] == 0xC8) || buffer[42] == 0xCC)) {
@@ -264,13 +229,10 @@ void DFRobot_Biometric::getRecognitionResult(sId_t* ID)
       ID->id = -1;
     }
   }
-  while (_serial.available()) {
-    _serial.read();
-  }
 }
 
 uint8_t DFRobot_Biometric::LEDcolor(uint8_t color, uint8_t kind)
-{
+{  
   uint8_t  data[8]     = { 0xEF, 0xAA, 0x90, 0x00, 0x02, 0x00, 0x00, 0x00 };
   uint8_t  buffer[250] = { 0 };
   uint16_t bufLen      = 0;
@@ -278,10 +240,7 @@ uint8_t DFRobot_Biometric::LEDcolor(uint8_t color, uint8_t kind)
   data[5]              = color;
   data[6]              = kind;
   calculateChecksum(data, 8);
-  while (_serial.available()) {
-    _serial.read();
-  }
-  _serial.write(data, 8);
+  writeCmd(data,8);
   state = waitForReply(buffer, bufLen, 1500);
   if (state == true) {
     if (buffer[6] == 0x00) {
@@ -289,4 +248,17 @@ uint8_t DFRobot_Biometric::LEDcolor(uint8_t color, uint8_t kind)
     }
   }
   return 0;
+}
+
+void DFRobot_Biometric::serialEmpty(void)
+{
+  while (_serial.available()) {
+    _serial.read();
+  }
+}
+
+void DFRobot_Biometric::writeCmd(uint8_t* data,uint8_t len)
+{
+  serialEmpty();
+  _serial.write(data, len);
 }

@@ -60,7 +60,7 @@ public:
    * @return 返回任务执行结果
    * @retval 0 未作出回应
    * @retval 1 表示成功
-   * @retval 2 表
+   * @retval 2 表示重复
    * @retval 3 表示录入超时
    */
   uint8_t enrollUser(uint8_t kind);
@@ -144,8 +144,27 @@ private:
    * @param buffer 存放命令的数组首地址
    * @param bufLen 数组索引
    * @param timeout 等待时间
+   * @return None
    */
   bool waitForReply(uint8_t* buffer, uint16_t& bufLen, uint16_t timeout);
+
+  /**
+   * @fn serialEmpty
+   * @brief 接收反馈前后，清除接收缓冲区
+   * @details 函数细节描述(简单函数可以不需要)
+   * @return None
+   */
+  void serialEmpty(void);
+
+  /**
+   * @fn writeCmd
+   * @brief 发送命令
+   * @details 函数细节描述(简单函数可以不需要)
+   * @param data 存放命令的数组首地址
+   * @param len 命令长度
+   * @return None
+   */
+  void writeCmd(uint8_t* data,uint8_t len);
 };
 
 #endif

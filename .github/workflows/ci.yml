@@ -2,14 +2,32 @@ name: CI
 on:
   push:
     branches:
-      - "**"   # 监听所有分支，避免分支名不匹配导致不触发
+      - "**"
     tags:
-        - "v*.*.*"   # 小写 v 触发
-        - "V*.*.*"   # 大写 V 触发
+        - "v*.*.*"
+        - "V*.*.*"
   pull_request:
-  workflow_dispatch:  # 允许在 Actions 页面手动触发
+  workflow_dispatch:
 
 jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
+      
+      - name: Install AVR platform
+        run: arduino-cli core install arduino:avr
+      
+      - name: Compile all examples
+        run: |
+          for example in examples/*/*.ino; do
+            echo "Compiling $example"
+            arduino-cli compile --fqbn arduino:avr:uno --library . "$example"
+          done
+      
   call-reusable:
     uses: cdjq/cloud-code-checks/.github/workflows/ci.yml@master
     secrets: inherit

@@ -121,7 +121,7 @@ To use this library, first download the library file, paste it into the \Arduino
   int8_t deleteAllUser(void);
 
   /**
-   * @fn LEDcolor
+   * @fn ledColor
    * @brief Control LED status
    * @details Detailed description (optional)
    * @param color LED color: COLOR_GREEN green, COLOR_RED red, COLOR_WHITE white
@@ -131,7 +131,7 @@ To use this library, first download the library file, paste it into the \Arduino
    * @retval ERROR -2 Invalid kind parameter
    * @retval 1 Success
    */
-  int8_t LEDcolor(uint8_t color, uint8_t kind);
+  int8_t ledColor(uint8_t color, uint8_t kind);
 ```
 
 ## Compatibility

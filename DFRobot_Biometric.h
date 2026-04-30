@@ -52,8 +52,8 @@ public:
    * @attention 注意事项
    */
   typedef enum {
-    ROLE_NORMAL = 0,
-    ROLE_ADMIN  = 1,
+    eRoleNormal = 0,
+    eRoleAdmin  = 1,
   } eIsAdmin_t;
 
   /**
@@ -164,7 +164,7 @@ public:
   int8_t deleteAllUser(void);
 
   /**
-   * @fn LEDcolor
+   * @fn ledColor
    * @brief 控制led的状态
    * @details 函数细节描述(简单函数可以不需要)
    * @param color 灯的颜色，COLOR_GREEN 绿灯，COLOR_RED 红灯，COLOR_WHITE 白灯
@@ -174,7 +174,7 @@ public:
    * @retval ERROR -2 kind参数无效
    * @retval 1 执行成功
    */
-  int8_t LEDcolor(uint8_t color, uint8_t kind);
+  int8_t ledColor(uint8_t color, uint8_t kind);
 
 private:
   Stream& _serial;

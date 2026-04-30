@@ -19,7 +19,7 @@ getAllNumsPalmUserIDs	KEYWORD2
 getRecognitionResult	KEYWORD2
 deleteUser	KEYWORD2
 deleteAllUser  KEYWORD2
-LEDcolor  KEYWORD2
+ledColor  KEYWORD2
 calculateChecksum  KEYWORD2
 waitForReply  KEYWORD2
 serialEmpty  KEYWORD2

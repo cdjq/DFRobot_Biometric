@@ -237,7 +237,7 @@ int8_t DFRobot_Biometric::getRecognitionResult(sId_t* ID)
   return NO_ACK;
 }
 
-int8_t DFRobot_Biometric::LEDcolor(uint8_t color, uint8_t kind)
+int8_t DFRobot_Biometric::ledColor(uint8_t color, uint8_t kind)
 {
   if (kind != LED_ON && kind != LED_OFF) {
     return ERROR;

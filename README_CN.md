@@ -121,7 +121,7 @@
   int8_t deleteAllUser(void);
 
   /**
-   * @fn LEDcolor
+   * @fn ledColor
    * @brief 控制led的状态
    * @details 函数细节描述(简单函数可以不需要)
    * @param color 灯的颜色，COLOR_GREEN 绿灯，COLOR_RED 红灯，COLOR_WHITE 白灯
@@ -131,7 +131,7 @@
    * @retval ERROR -2 kind参数无效
    * @retval 1 执行成功
    */
-  int8_t LEDcolor(uint8_t color, uint8_t kind);
+  int8_t ledColor(uint8_t color, uint8_t kind);
 ```
 
 ## 兼容性

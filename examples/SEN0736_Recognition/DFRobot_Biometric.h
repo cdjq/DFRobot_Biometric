@@ -13,36 +13,40 @@
 #define __DFROBOT_BIOMETRIC_H
 #include <Arduino.h>
 
-#define CMD_BEGIN              { 0xEF, 0xAA, 0x11, 0x00, 0x00, 0x11 }                                  ///<检测状态指令
-#define CMD_GET_FACE_USER_NUMS { 0xEF, 0xAA, 0x24, 0x00, 0x01, 0x01, 0x24 }                            ///<获取用户数量指令
-#define CMD_GET_FALM_USER_NUMS { 0xEF, 0xAA, 0x24, 0x00, 0x01, 0x02, 0x27 }                            ///<获取用户数量指令
-#define CMD_DELETE_ALL_USER    { 0xEF, 0xAA, 0x21, 0x00, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x24 }    ///<删除所有用户指令
-#define CMD_IDENTIFY_USER      { 0xEF, 0xAA, 0x12, 0x00, 0x02, 0x00, 0x0A, 0x1A }                      ///<识别用户指令
 
-#define COLOR_GREEN 0x00    ///<绿灯
-#define COLOR_RED   0x01    ///<红灯
-#define COLOR_WHITE 0x02    ///<白灯
+#define CMD_BEGIN                    { 0xEF, 0xAA, 0x11, 0x00, 0x00, 0x11 }                                ///<检测状态指令
+#define CMD_GET_FACE_USER_NUMS       { 0xEF, 0xAA, 0x24, 0x00, 0x01, 0x01, 0x24 }                          ///<获取用户数量指令
+#define CMD_GET_FALM_USER_NUMS       { 0xEF, 0xAA, 0x24, 0x00, 0x01, 0x02, 0x27 }                          ///<获取用户数量指令
+#define CMD_DELETE_ALL_USER          { 0xEF, 0xAA, 0x21, 0x00, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x24}   ///<删除所有用户指令
+#define CMD_IDENTIFY_USER            { 0xEF, 0xAA, 0x12, 0x00, 0x02, 0x00, 0x0A, 0x1A}                     ///<识别用户指令
 
-#define LED_OFF 0x01    ///<关灯
-#define LED_ON  0x00    ///<开灯
+#define COLOR_GREEN             0x00     ///<绿灯
+#define COLOR_RED               0x01     ///<红灯
+#define COLOR_WHITE             0x02     ///<白灯
 
-#define STATUS_STANDBY 0x00    ///<空闲状态
-#define STATUS_BUSY    0x01    ///<繁忙状态
-#define STATUS_ERROR   0x02    ///<出现错误
+#define LED_OFF                 0x01     ///<关灯
+#define LED_ON                  0x00     ///<开灯
 
-#define RESULT_OK         0x00    ///<命令执行成功
-#define RESULT_TIMEOUT    0x0D    ///<命令执行超时
-#define RESULT_REPEAT     0x0A    ///<已有人脸重复录入
-#define RESULT_NOT_FOUND  0x08    ///<用户不存在
-#define RESULT_UNKONW_ERR 0x05    ///<命令执行出现未知错误
+#define STATUS_STANDBY          0x00     ///<空闲状态
+#define STATUS_BUSY             0x01     ///<繁忙状态
+#define STATUS_ERROR            0x02     ///<出现错误
 
-#define FACE_USER 0x01    ///<人脸用户
-#define PALM_USER 0x02    ///<掌静脉用户
+#define RESULT_OK               0x00     ///<命令执行成功
+#define RESULT_TIMEOUT          0x0D     ///<命令执行超时
+#define RESULT_REPEAT           0x0A     ///<已有人脸重复录入
+#define RESULT_NOT_FOUND        0x08     ///<用户不存在
+#define RESULT_UNKONW_ERR       0x05     ///<命令执行出现未知错误
+
+#define FACE_USER               0x01     ///<人脸用户
+#define PALM_USER               0x02     ///<掌静脉用户
+
+
+
 
 class DFRobot_Biometric {
 public:
-#define NO_ACK -1    ///<模块无反应
-#define ERROR  -2    ///<参数错误
+  #define NO_ACK -1   ///<模块无反应
+  #define ERROR  -2   ///<参数错误
 
   /**
    * @enum eIsAdmin_t
@@ -51,24 +55,25 @@ public:
    * @note 注解
    * @attention 注意事项
    */
-  typedef enum {
-    ROLE_NORMAL = 0,
-    ROLE_ADMIN  = 1,
-  } eIsAdmin_t;
+  typedef enum{
+    ROLE_NORMAL=0,
+    ROLE_ADMIN=1,
+  }eIsAdmin_t;
 
   /**
    * @struct sId_t
    * @brief 用于存储识别函数返回的信息
    * @details 提示一些必要的技术细节(从数据手册上抄写)
    * @note 注解
-   * @attention
+   * @attention 
    */
   typedef struct {
-    int16_t    id;
-    uint8_t    kind;
+    int16_t id;
+    uint8_t kind;
     eIsAdmin_t isAdmin;
-    char       userName[33];
+    char userName[33];
   } sId_t;
+  
 
   /**
    * @fn DFRobot_Biometric
@@ -105,7 +110,7 @@ public:
    * @retval 2 表示重复
    * @retval 3 表示录入超时
    */
-  int8_t enrollUser(uint8_t kind, const char* userName, uint16_t* id, eIsAdmin_t idAdmin);
+  int8_t enrollUser(uint8_t kind,const char* userName,uint16_t* id,eIsAdmin_t idAdmin);
 
   /**
    * @fn getAllNumsFaceUserIDs
@@ -145,7 +150,7 @@ public:
    * @param  id 用户的id号，范围1~500
    * @return 删除结果
    * @retval NO_ACK -1 主模块无反应
-   * @retval ERROR  -2  ID超出1~500的范围
+   * @retval ERROR  -2  ID超出1~500的范围       
    * @retval 1 删除成功
    * @retval 2 无指定用户
    * @retval 3 未知错误，建议再次删除
@@ -196,7 +201,7 @@ private:
    * @param timeout 等待时间
    * @return None
    */
-  bool waitForReply(uint8_t* buffer, uint16_t timeout);
+  bool waitForReply(uint8_t* buffer,  uint16_t timeout);
 
   /**
    * @fn serialEmpty
@@ -216,7 +221,7 @@ private:
    * @param outTime 超时时间
    * @return None
    */
-  bool writeCmd(uint8_t* data, uint8_t len, uint8_t* buffer, uint16_t outTime);
+  bool writeCmd(uint8_t* data,uint8_t len,uint8_t*buffer,uint16_t outTime);
 };
 
 #endif

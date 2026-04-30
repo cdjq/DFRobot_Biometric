@@ -14,20 +14,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Install Arduino CLI
         uses: arduino/setup-arduino-cli@v1
-      
+
       - name: Install AVR platform
         run: arduino-cli core install arduino:avr
-      
+
       - name: Compile all examples
         run: |
           for example in examples/*/*.ino; do
             echo "Compiling $example"
             arduino-cli compile --fqbn arduino:avr:uno --library . "$example"
           done
-      
+
   call-reusable:
     uses: cdjq/cloud-code-checks/.github/workflows/ci.yml@master
     secrets: inherit

@@ -14,7 +14,7 @@ void loop()
   while (face.begin() == false) {
     Serial.println("主模块未响应");
   }
-  DFRobot_Biometric::sId_t user   = { 0, 0, DFRobot_Biometric::eRoleNormal, 0 };
+  DFRobot_Biometric::sId_t user   = { 0, 0, DFRobot_Biometric::eRoleNormal, { 0 } };
   int8_t                   result = 0;
   result                          = face.getRecognitionResult(&user);
   if (result == 1) {

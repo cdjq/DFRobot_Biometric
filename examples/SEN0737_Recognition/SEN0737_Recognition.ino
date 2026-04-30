@@ -4,10 +4,10 @@ DFRobot_Biometric face(Serial2);    //创建类的全局对象
 void setup()
 {
   // put your setup code here, to run once:
-  Serial2.begin(115200);              //开启串口2,与模块通信
-  Serial.begin(115200);               //开启串口1，实现信息的打印
-  pinMode(IR_PIN, INPUT_PULLDOWN);    //设置未下拉输入，红外引脚高电平时做出反馈
-  delay(2000);                        //等待模块启动
+  Serial2.begin(115200);     //开启串口2,与模块通信
+  Serial.begin(115200);      //开启串口1，实现信息的打印
+  pinMode(IR_PIN, INPUT);    //设置未下拉输入，红外引脚高电平时做出反馈
+  delay(2000);               //等待模块启动
 }
 
 void loop()
@@ -19,7 +19,7 @@ void loop()
   while (digitalRead(IR_PIN) == LOW) {
     delay(500);
   }
-  DFRobot_Biometric::sId_t user   = { 0, 0, DFRobot_Biometric::eRoleNormal, 0 };
+  DFRobot_Biometric::sId_t user   = { 0, 0, DFRobot_Biometric::eRoleNormal, { 0 } };
   int8_t                   result = 0;
   result                          = face.getRecognitionResult(&user);
   if (result == 1) {

@@ -1,18 +1,19 @@
 # DFRobot_Biometric
 - [中文版](./README_CN.md)
 
-Copy the relevant description of the chip from the datasheet.
+The FP001 and FP002 are face and palm vein recognition modules equipped with a bionic face recognition algorithm. They support UVC/UAC transmission and MJPEG video format, achieving both security and a good user experience. Featuring low power consumption, low cost, fast recognition, exquisite appearance, and compact structure, these modules utilize high-performance chips to quickly complete the entire process of face recognition and palm vein recognition.
 
-Write the module introduction here, including the basic functions (Use examples or application scenes to explain what users can do with this product), the advantages of the module (What makes this product worthy buying) and some key terms.
+The Biometric library provides a unified encapsulation of the functions for these two modules. Compared with FP001, FP002 adds infrared detection and a controllable tri-color indicator light. It offers two user registration methods (face and palm vein) with high recognition efficiency, fast and accurate response. The library also includes an administrator user function. The recognition algorithms are executed within the module itself; this library primarily handles command interaction – sending commands, receiving feedback – and ensures timely command response.
 
 
-Product images (SVG is not recommended here)
 
-![Product Image](./resources/images/SEN0001.png)
+
+![Product Image](./resources/images/SEN0736.png)
+![Product Image](./resources/images/SEN0737.png)
 
 
 ## Product Link (Link to DFRobot store)
-    SKU: XXXX
+    SKU: SEN0736 FP001 and SEN0737 FP002 Face and Palm Vein Recognition Modules
 
 ## Table of Contents
 
@@ -57,7 +58,7 @@ To use this library, first download the library file, paste it into the \Arduino
    * @param idAdmin Administrator flag (eIsAdmin_t)
    * @return Task execution result
    * @retval NO_ACK -1 No response from main module
-   * @retval ERROR -2 User name too long
+   * @retval ERROR -2 User name too long or kind is not exist
    * @retval 1 Success
    * @retval 2 Duplicate
    * @retval 3 Enrollment timeout
@@ -99,10 +100,10 @@ To use this library, first download the library file, paste it into the \Arduino
    * @fn deleteUser
    * @brief Delete a specified user by ID
    * @details Detailed description (optional)
-   * @param id User ID, range 1~500
+   * @param id User ID, range 1~800
    * @return Deletion result
    * @retval NO_ACK -1 No response from main module
-   * @retval ERROR -2 ID out of range (1~500)
+   * @retval ERROR -2 ID out of range (1~800)
    * @retval 1 Deletion successful
    * @retval 2 User not found
    * @retval 3 Unknown error, suggest retry
@@ -147,8 +148,8 @@ micro:bit        |      √       |              |             |
 
 ## History
 
-- 2026/04/28 - Version 1.0.0 released.
+- 2026/04/30 - Version 1.0.0 released.
 
 ## Credits
 
-Written by Olive-hy, 2019. (Welcome to our [website](https://www.dfrobot.com/))
+Written by Olive-hy(feng.yang@dfrobot.com), 2026-4-30 (Welcome to our [website](https://www.dfrobot.com/))

@@ -1,12 +1,13 @@
 # DFRobot_Biometric
 - [English Version](./README.md)
 
-数据手册上抄一下芯片的描述
+ FP001和FP002是人脸掌静脉识别模组，搭载仿生人脸识别算法，支持 UVC/UAC 方式传输，MJPEG 视
+频格式，既实现了安全性，又兼具了良好的用户体验，具有功耗低、成本低、快速识别、外观
+精致、产品结构小巧等特点，采用了高算力芯片，快速完成人脸识别和掌静脉识别的完整过程
 
-这里写模块介绍，做到读完这段，就能对模块有初步了解，让客户懂的用这个模块能干什么（数据手册通常比较官方，这里你可以举例子，更场景化）<br>
-这个模块的优点，告诉用户为什么要购买这个模块。一些关键术语，我们要在readme中有解释
+Biometric库是对于这两个模块的功能进行统一的封装，FP002比FP001多了红外检测和一个三色可控制的指示灯，提供了人脸和掌静脉两种用户注册方式，识别效率高，反应精准快
+，还有管理员用户功能，算法在模块内完成，本库主要进行指令交互，下达命令，接受反馈，命令响应及时 翻译一下<br>
 
-这里需要显示拍照图片，可以一张图片，可以多张图片（不要用SVG图）
 
 ![产品效果图片](./resources/images/SEN0736.png)
 ![产品效果图片](./resources/images/SEN0737.png)
@@ -14,7 +15,7 @@
 
 ## 产品链接（链接到中文商城）
 
-    SKU：产品名称
+    SKU：SEN0736 FP001和SEN0737FP002人脸与掌静脉识别模块
 
 ## 目录
 
@@ -27,7 +28,7 @@
 
 ## 概述
 
-这里填写当前Arduino软件库完成了基础功能，特色功能
+本库实现了人脸与掌静脉注册用户，用户识别，用户的删除管理，获取用户数量，控制指示灯等功能
 
 ## 库安装
 
@@ -37,17 +38,17 @@
 
 ```C++
   /**
-   * @fn begin
+   * @fn check_state
    * @brief 确认模块是否就绪,是否空闲
    * @details 函数细节描述(简单函数可以不需要)
    * @param None (无，可以不需要)
    * @return bool类型
    * @retval true 就绪
    * @retval false 未就绪
-   * @note 初始化或则执行某项命令前可以用begin()函数检查状态
+   * @note 初始化或则执行某项命令前可以用check_state()函数检查状态
    * @attention 注意事项(没有可不需要)
    */
-  bool begin(void);
+  bool check_state(void);
 
   /**
    * @fn enrollUser
@@ -57,7 +58,7 @@
    * @param userName  用户名称,字符长度为1~32
    * @return 返回任务执行结果
    * @retval NO_ACK -1 主模块无反应
-   * @retval ERROR  -2用户名字符串过长
+   * @retval ERROR  -2用户名字符串过长或传入了不存在的人脸参数
    * @retval 1 表示成功
    * @retval 2 表示重复
    * @retval 3 表示录入超时
@@ -99,10 +100,10 @@
    * @fn deleteUser
    * @brief 删除指定用户
    * @details 函数细节描述(简单函数可以不需要)
-   * @param  id 用户的id号，范围1~500
+   * @param  id 用户的id号，范围1~800
    * @return 删除结果
    * @retval NO_ACK -1 主模块无反应
-   * @retval ERROR  -2  ID超出1~500的范围
+   * @retval ERROR  -2  ID超出1~800的范围
    * @retval 1 删除成功
    * @retval 2 无指定用户
    * @retval 3 未知错误，建议再次删除
@@ -128,7 +129,7 @@
    * @param kind LED_ON 开灯，LED_OFF 关灯
    * @return 执行结果
    * @retval NO_ACK -1 表示主模块无反应
-   * @retval ERROR -2 kind参数无效
+   * @retval ERROR -2 kind或color参数无效
    * @retval 1 执行成功
    */
   int8_t ledColor(uint8_t color, uint8_t kind);
@@ -147,8 +148,8 @@ micro:bit        |      √       |              |             |
 
 ## 历史
 
-- 2026/04/28 - 1.0.0 版本
+- 2026/04/30 - 1.0.0 版本
 
 ## 创作者
 
-Written by Olive-hy, 2026. (Welcome to our [website](https://www.dfrobot.com/))
+Written by Olive-hy(feng.yang@dfrobot.com), 2026-4-30 (Welcome to our [website](https://www.dfrobot.com/))

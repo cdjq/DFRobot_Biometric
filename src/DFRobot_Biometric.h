@@ -1,7 +1,7 @@
 /*!
  * @file DFRobot_Biometric.h
- * @brief 定义DFRobot_Biometric 类的基础结构
- * @details 这是一个人脸与掌静脉识别模块，通过串口和USB去发送命令
+ * @brief Define the infrastructure of DFRobot_Biometric class
+ * @n     This is Biometric sensor that can be controlled through USART port.
  * @copyright	Copyright (c) 2026 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license The MIT License (MIT)
  * @author [Ouki](ouki.wang@dfrobot.com)
@@ -13,43 +13,43 @@
 #define __DFROBOT_BIOMETRIC_H
 #include <Arduino.h>
 
-#define CMD_BEGIN              { 0xEF, 0xAA, 0x11, 0x00, 0x00, 0x11 }                                  ///<检测状态指令
-#define CMD_GET_FACE_USER_NUMS { 0xEF, 0xAA, 0x24, 0x00, 0x01, 0x01, 0x24 }                            ///<获取用户数量指令
-#define CMD_GET_FALM_USER_NUMS { 0xEF, 0xAA, 0x24, 0x00, 0x01, 0x02, 0x27 }                            ///<获取用户数量指令
-#define CMD_DELETE_ALL_USER    { 0xEF, 0xAA, 0x21, 0x00, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x24 }    ///<删除所有用户指令
-#define CMD_IDENTIFY_USER      { 0xEF, 0xAA, 0x12, 0x00, 0x02, 0x00, 0x0A, 0x1A }                      ///<识别用户指令
+#define CMD_BEGIN              { 0xEF, 0xAA, 0x11, 0x00, 0x00, 0x11 }                                  ///<Check status command
+#define CMD_GET_FACE_USER_NUMS { 0xEF, 0xAA, 0x24, 0x00, 0x01, 0x01, 0x24 }                            ///<Get face user count command
+#define CMD_GET_FALM_USER_NUMS { 0xEF, 0xAA, 0x24, 0x00, 0x01, 0x02, 0x27 }                            ///<Get palm user count command
+#define CMD_DELETE_ALL_USER    { 0xEF, 0xAA, 0x21, 0x00, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x24 }    ///<Delete all users command
+#define CMD_IDENTIFY_USER      { 0xEF, 0xAA, 0x12, 0x00, 0x02, 0x00, 0x0A, 0x1A }                      ///<Identify user command
 
-#define COLOR_GREEN 0x00    ///<绿灯
-#define COLOR_RED   0x01    ///<红灯
-#define COLOR_WHITE 0x02    ///<白灯
+#define COLOR_GREEN 0x00    ///<Green light
+#define COLOR_RED   0x01    ///<Red light
+#define COLOR_WHITE 0x02    ///<White light
 
-#define LED_OFF 0x01    ///<关灯
-#define LED_ON  0x00    ///<开灯
+#define LED_OFF 0x01    ///<Turn off LED
+#define LED_ON  0x00    ///<Turn on LED
 
-#define STATUS_STANDBY 0x00    ///<空闲状态
-#define STATUS_BUSY    0x01    ///<繁忙状态
-#define STATUS_ERROR   0x02    ///<出现错误
+#define STATUS_STANDBY 0x00    ///<Standby status
+#define STATUS_BUSY    0x01    ///<Busy status
+#define STATUS_ERROR   0x02    ///<Error status
 
-#define RESULT_OK         0x00    ///<命令执行成功
-#define RESULT_TIMEOUT    0x0D    ///<命令执行超时
-#define RESULT_REPEAT     0x0A    ///<已有人脸重复录入
-#define RESULT_NOT_FOUND  0x08    ///<用户不存在
-#define RESULT_UNKONW_ERR 0x05    ///<命令执行出现未知错误
+#define RESULT_OK         0x00    ///<Command executed successfully
+#define RESULT_TIMEOUT    0x0D    ///<Command execution timeout
+#define RESULT_REPEAT     0x0A    ///<Face already enrolled
+#define RESULT_NOT_FOUND  0x08    ///<User not found
+#define RESULT_UNKONW_ERR 0x05    ///<Unknown error occurred
 
-#define FACE_USER 0x01    ///<人脸用户
-#define PALM_USER 0x02    ///<掌静脉用户
+#define FACE_USER 0x01    ///<Face user
+#define PALM_USER 0x02    ///<Palm user
 
 class DFRobot_Biometric {
 public:
-#define NO_ACK -1    ///<模块无反应
-#define ERROR  -2    ///<参数错误
+#define NO_ACK -1    ///<No response from module
+#define ERROR  -2    ///<Parameter error
 
   /**
    * @enum eIsAdmin_t
-   * @brief 是否是管理员用户
-   * @details 提示一些必要的技术细节(从数据手册上抄写)
-   * @note 注解
-   * @attention 注意事项
+   * @brief Whether the user is an administrator
+   * @details Technical details from the datasheet
+   * @note Note
+   * @attention Attention
    */
   typedef enum {
     eRoleNormal = 0,
@@ -58,10 +58,10 @@ public:
 
   /**
    * @struct sId_t
-   * @brief 用于存储识别函数返回的信息
-   * @details 提示一些必要的技术细节(从数据手册上抄写)
-   * @note 注解
-   * @attention
+   * @brief Store information returned by recognition function
+   * @details Technical details from the datasheet
+   * @note Note
+   * @attention Attention
    */
   typedef struct {
     int16_t    id;
@@ -72,107 +72,107 @@ public:
 
   /**
    * @fn DFRobot_Biometric
-   * @brief 构造函数
-   * @details 函数细节描述(简单函数可以不需要)
-   * @param serial 定义对象时，传进来初始化的一个串口
+   * @brief Constructor
+   * @details Constructor details
+   * @param serial The serial port used for initialization
    * @return None
    */
   DFRobot_Biometric(Stream& serial);
 
   /**
-   * @fn begin
-   * @brief 确认模块是否就绪,是否空闲
-   * @details 函数细节描述(简单函数可以不需要)
-   * @param None (无，可以不需要)
-   * @return bool类型
-   * @retval true 就绪
-   * @retval false 未就绪
-   * @note 初始化或则执行某项命令前可以用begin()函数检查状态
-   * @attention 注意事项(没有可不需要)
+   * @fn check_state
+   * @brief Check if the module is ready and idle
+   * @details Function details
+   * @param None
+   * @return bool type
+   * @retval true Module is ready
+   * @retval false Module is not ready
+   * @note Use check_state() to check status before initialization or executing commands
+   * @attention
    */
-  bool begin(void);
+  bool check_state(void);
 
   /**
    * @fn enrollUser
-   * @brief 对人脸或掌静脉进行识别
-   * @details 函数细节描述(简单函数可以不需要)
-   * @param kind FACE_USER表示进行人脸识别，PALM_USER表示进行掌静脉识别
-   * @param userName  用户名称,字符长度为1~32
-   * @return 返回任务执行结果
-   * @retval NO_ACK -1 主模块无反应
-   * @retval ERROR  -2用户名字符串过长
-   * @retval 1 表示成功
-   * @retval 2 表示重复
-   * @retval 3 表示录入超时
+   * @brief Enroll face or palm for recognition
+   * @details Function details
+   * @param kind FACE_USER for face enrollment, PALM_USER for palm enrollment
+   * @param userName User name, length 1~32 characters
+   * @return Task execution result
+   * @retval NO_ACK -1 No response from module
+   * @retval ERROR  -2 User parameter error, such as invalid user type or name length
+   * @retval 1 Success
+   * @retval 2 Duplicate
+   * @retval 3 Enrollment timeout
    */
   int8_t enrollUser(uint8_t kind, const char* userName, uint16_t* id, eIsAdmin_t idAdmin);
 
   /**
    * @fn getAllNumsFaceUserIDs
-   * @brief 获取人脸用户的数量
-   * @details 函数细节描述(简单函数可以不需要)
-   * @return 人脸用户的数量
-   * @retval  NO_ACK -1表示模块无反应
+   * @brief Get the number of face users
+   * @details Function details
+   * @return Number of face users
+   * @retval NO_ACK -1 No response from module,
    */
   int16_t getAllNumsFaceUserIDs(void);
 
   /**
    * @fn getAllNumsPalmUserIDs
-   * @brief 获取掌静脉用户的数量
-   * @details 函数细节描述(简单函数可以不需要)
-   * @return 掌静脉用户的数量
-   * @retval NO_ACK -1 表示主模块无反应
+   * @brief Get the number of palm users
+   * @details Function details
+   * @return Number of palm users
+   * @retval NO_ACK -1 No response from module
    */
   int16_t getAllNumsPalmUserIDs(void);
 
   /**
    * @fn getRecognitionResult
-   * @brief 对用户进行识别
-   * @details 函数细节描述(简单函数可以不需要)
-   * @param ID 存放识别到的用户信息
-   * @return 执行结果
-   * @retval NO_ACK -1 表示主模块无反应
-   * @retval 1 执行成功
-   * @retval 2 超时
-   * @retval 3 无此用户
+   * @brief Recognize the user
+   * @details Function details
+   * @param ID Store the recognized user information
+   * @return Execution result
+   * @retval NO_ACK -1 No response from module
+   * @retval 1 Success
+   * @retval 2 Timeout
+   * @retval 3 User not found
    */
   int8_t getRecognitionResult(sId_t* ID);
 
   /**
    * @fn deleteUser
-   * @brief 删除指定用户
-   * @details 函数细节描述(简单函数可以不需要)
-   * @param  id 用户的id号，范围1~500
-   * @return 删除结果
-   * @retval NO_ACK -1 主模块无反应
-   * @retval ERROR  -2  ID超出1~500的范围
-   * @retval 1 删除成功
-   * @retval 2 无指定用户
-   * @retval 3 未知错误，建议再次删除
+   * @brief Delete specified user
+   * @details Function details
+   * @param id User ID, range 1~500
+   * @return Delete result
+   * @retval NO_ACK -1 No response from module
+   * @retval ERROR  -2 ID out of range 1~500
+   * @retval 1 Delete success
+   * @retval 2 User not found
+   * @retval 3 Unknown error, suggest retry
    */
   int8_t deleteUser(uint16_t id);
 
   /**
    * @fn deleteAllUser
-   * @brief 删除所有用户
-   * @details 函数细节描述(简单函数可以不需要)
-   * @return 删除结果
-   * @retval NO_ACK -1 主模块无反应
-   * @retval 1 删除成功
-   * @retval 2 未知错误，建议再次删除
+   * @brief Delete all users
+   * @details Function details
+   * @return Delete result
+   * @retval NO_ACK -1 No response from module ,ERROR  -2 User parameter error
+   * @retval 1 Delete success
+   * @retval 2 Unknown error, suggest retry
    */
   int8_t deleteAllUser(void);
 
   /**
    * @fn ledColor
-   * @brief 控制led的状态
-   * @details 函数细节描述(简单函数可以不需要)
-   * @param color 灯的颜色，COLOR_GREEN 绿灯，COLOR_RED 红灯，COLOR_WHITE 白灯
-   * @param kind LED_ON 开灯，LED_OFF 关灯
-   * @return 执行结果
-   * @retval NO_ACK -1 表示主模块无反应
-   * @retval ERROR -2 kind参数无效
-   * @retval 1 执行成功
+   * @brief Control LED status
+   * @details Function details
+   * @param color LED color: COLOR_GREEN green, COLOR_RED red, COLOR_WHITE white
+   * @param kind LED_ON turn on, LED_OFF turn off
+   * @return Execution result
+   * @retval NO_ACK -1 No response from module
+   * @retval ERROR -2 Invalid kind or color parameter
+   * @retval 1 Success
    */
   int8_t ledColor(uint8_t color, uint8_t kind);
 
@@ -181,39 +181,39 @@ private:
 
   /**
    * @fn calculateChecksum
-   * @brief 计算命令的校验值
-   * @details 函数细节描述(简单函数可以不需要)
-   * @param data 存放命令的数组首地址
-   * @param len 命令长度
+   * @brief Calculate checksum for command
+   * @details Function details
+   * @param data Command array pointer
+   * @param len Command length
    */
   void calculateChecksum(uint8_t* data, uint8_t len);
 
   /**
    * @fn waitForReply
-   * @brief 发送命令后，等待读取reply反馈指令
-   * @details 函数细节描述(简单函数可以不需要)
-   * @param buffer 存放命令的数组首地址
-   * @param timeout 等待时间
+   * @brief Send command and wait for reply feedback
+   * @details Function details
+   * @param buffer Command array pointer
+   * @param timeout Wait time
    * @return None
    */
   bool waitForReply(uint8_t* buffer, uint16_t timeout);
 
   /**
    * @fn serialEmpty
-   * @brief 接收反馈前后，清除接收缓冲区
-   * @details 函数细节描述(简单函数可以不需要)
+   * @brief Clear receive buffer before and after receiving feedback
+   * @details Function details
    * @return None
    */
   void serialEmpty(void);
 
   /**
    * @fn writeCmd
-   * @brief 发送命令
-   * @details 函数细节描述(简单函数可以不需要)
-   * @param data 存放命令的数组首地址
-   * @param len 命令长度
-   * @param buffer 存放模块反馈指令的数组首地址
-   * @param outTime 超时时间
+   * @brief Send command
+   * @details Function details
+   * @param data Command array pointer
+   * @param len Command length
+   * @param buffer Feedback array pointer
+   * @param outTime Timeout
    * @return None
    */
   bool writeCmd(uint8_t* data, uint8_t len, uint8_t* buffer, uint16_t outTime);

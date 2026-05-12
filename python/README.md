@@ -1,0 +1,138 @@
+# DFRobot_Biometric
+
+- [中文版](./README_CN.md)
+
+The FP001 and FP002 are face and palm vein recognition modules equipped with a bionic face recognition algorithm. They support UVC/UAC transmission and MJPEG video format, achieving both security and a good user experience. Featuring low power consumption, low cost, fast recognition, exquisite appearance, and compact structure, these modules utilize high-performance chips to quickly complete the entire process of face recognition and palm vein recognition.
+
+The Biometric library provides a unified encapsulation of the functions for these two modules. Compared with FP001, FP002 adds infrared detection and a controllable tri-color indicator light. It offers two user registration methods (face and palm vein) with high recognition efficiency, fast and accurate response. The library also includes an administrator user function. The recognition algorithms are executed within the module itself; this library primarily handles command interaction – sending commands, receiving feedback – and ensures timely command response.
+
+
+
+![Product Image](../resources/images/SEN0736.png)
+![Product Image](../resources/images/SEN0737.png)
+
+
+## Product Link (Link to DFRobot store)
+    SKU: SEN0736 FP001 and SEN0737 FP002 Face and Palm Vein Recognition Modules
+
+## Table of Contents
+
+  * [Summary](#summary)
+  * [Installation](#installation)
+  * [Methods](#methods)
+  * [Compatibility](#compatibility)
+  * [History](#history)
+  * [Credits](#credits)
+
+## Summary
+
+Introduce the basic and special functions of this python Library.
+
+## Installation
+
+To use this library, first download the library to your Raspberry Pi, then navigate to the examples folder. To run an example script, such as demox.py, type python demox.py in the command line. For example, to run the enrollUser.py example, you would enter:
+
+```python
+python control_led.py
+```
+
+
+
+## Methods
+
+```python
+  '''!
+      @brief Check module is ready and idle (CMD_BEGIN, STATUS_STANDBY).
+      @return bool True if module ready
+      @retval True module ready
+      @retval False module not ready
+    '''
+  def check_state(self):
+
+  '''!
+      @brief Get number of palm users
+      @return int Count on success
+      @retval nums>0 collect Number of palm users
+      @retval NO_ACK no response
+    '''
+  def get_all_nums_palm_user_ids(self):
+
+  '''!
+      @brief Get number of face users
+      @return int Count on success
+      @retval nums>0 collect Number of face users
+      @retval NO_ACK no response
+    '''
+  def get_all_nums_face_user_ids(self):
+
+  '''!
+      @brief Enroll face or palm
+      @param kind FACE_USER or PALM_USER
+      @param user_name str 1~32 characters
+      @param is_admin ROLE_NORMAL or ROLE_ADMIN
+      @return tuple (retval, new_id) retval: 1 success, 2 duplicate, 3 timeout, NO_ACK is no response, ERROR parameter error; new_id int or None
+    '''
+  def enroll_user(self, kind, user_name, is_admin):
+
+  '''!
+      @brief Identify user; fills sid on success
+      @param sid SId instance to fill
+      @return the result
+      @retval  1 success,2 timeout,3 not found,NO_ACK no response,ERROR parameter error
+    '''
+  def get_recognition_result(self, sid):
+
+  '''!
+      @brief Delete user by id (same bounds and branches as C++: 1~500)
+      @param user_id int
+      @return the result
+      @retval  1 success,2 not found,3 unknow err,NO_ACK no response,ERROR parameter error
+    '''
+  def delete_user(self, user_id):
+
+    '''!
+      @brief Delete all users
+      @return the result
+      @retval  1 success,2 unknown err,NO_ACK no response
+    '''
+  def delete_all_user(self):
+
+    '''!
+      @brief LED color on/off
+      @param color COLOR_GREEN, COLOR_RED, COLOR_WHITE
+      @param kind LED_ON or LED_OFF
+      @return the result
+      @retval  1 success,NO_ACK no response,ERROR parameter error
+    '''
+  def led_color(self, color, kind):
+
+    '''!
+      @brief Close serial port
+    '''
+  def close(self):
+```
+
+## Compatibility
+
+* RaspberryPi Version
+
+| Board        | Work Well | Work Wrong | Untested | Remarks |
+| ------------ | :-------: | :--------: | :------: | ------- |
+| RaspberryPi2 |           |            |    √     |         |
+| RaspberryPi3 |           |            |    √     |         |
+| RaspberryPi4 |     √     |            |          |         |
+
+* Python Version
+
+| Python  | Work Well | Work Wrong | Untested | Remarks |
+| ------- | :-------: | :--------: | :------: | ------- |
+| Python2 |     √     |            |          |         |
+| Python3 |     √     |            |          |         |
+
+## History
+
+- 2026/05/11 - Version 1.0.0 released.
+
+## Credits
+
+Written by Olive-hy(feng.yang@dfrobot.com), 2026-5-11 (Welcome to our [website](https://www.dfrobot.com/))

@@ -19,6 +19,8 @@
 #define ModuleSerial Serial1
 #elif defined(ESP32)
 #define ModuleSerial Serial2
+#elif defined(__AVR__)
+#define ModuleSerial Serial
 #else
 #error "This board is not supported"
 #endif

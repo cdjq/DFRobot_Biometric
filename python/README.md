@@ -66,6 +66,14 @@ python control_led.py
   def get_all_nums_face_user_ids(self):
 
   '''!
+      @brief Get specific face user IDs
+      @param id_buffer writable sequence to receive face IDs
+      @param length int Maximum number of IDs the buffer can hold
+      @return int RESULT_OK on success, ERROR when buffer is too small, NO_ACK no response
+    '''
+  def get_all_face_user_ids(self, id_buffer, length):
+
+  '''!
       @brief Enroll face or palm
       @param kind FACE_USER or PALM_USER
       @param user_name str 1~32 characters

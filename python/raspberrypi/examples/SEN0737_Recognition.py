@@ -13,36 +13,36 @@
 
 import serial
 import time
-import RPi.GPIO as GPIO
+from gpiozero import Button
 from DFRobot_Biometric import DFRobot_Biometric, SId
 
 
 try:
-  ser = serial.Serial(port='/dev/ttyAMA3', baudrate=115200, timeout=0.5)
+  ser = serial.Serial(port='/dev/ttyAMA3', baudrate=115200, timeout=0.5)  # Initialize the serial port for printing information
   ser.write(b"serial start:\r\n")
 except Exception as e:
   ser.write(b"serial fail:: {e}\r\n")
   exit()
 
-bio = DFRobot_Biometric(port='/dev/serial0', baudrate=115200)
+bio = DFRobot_Biometric(port='/dev/serial0', baudrate=115200)  # Initialize the class object and pass in a serial port
 
-GPIO.setmode(GPIO.BCM)  # Configure the infrared pin
-SENSOR_PIN = 17  # BCM 17
-GPIO.setup(SENSOR_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)  # Configure the infrared pin as an input with a pull-down resistor.
+ir_sensor = Button(17, pull_up=False)  # Configure the infrared pin as an input with a pull-down resistor.
 
 try:
   while True:
-    if GPIO.input(SENSOR_PIN) == GPIO.HIGH:
+    if ir_sensor.is_pressed:
+      ser.write(b"------------------------------------------------\r\n")
       ser.write(b"find object\r\n")
       ser.write(b"Start connect Module...\r\n")
+      # Determine whether the module is ready
       while not bio.check_state():
         ser.write(b"Connection Module Fail\r\n")
       ser.write(b" Module is ready\r\n")
-      my_sid = SId()
+      my_sid = SId()  # Create an SId object to store the recognition result
       result = bio.get_recognition_result(my_sid)
       if result == 1:
         ser.write(b"Recognition successful\r\n")
-        ser.write(f"the id is:{my_sid}\r\n".encode())
+        ser.write(f"the imformation of user:   {my_sid}\r\n".encode())
       elif result == 2:
         ser.write(b"Recognition timeout\r\n")
       elif result == 3:
@@ -51,6 +51,9 @@ try:
         ser.write(b"parameter error\r\n")
       else:
         ser.write(b"Unknown error\r\n")
+      ser.write(b"------------------------------------------------\r\n")
+      ser.write(b"\r\n")
+      time.sleep(2)
 except KeyboardInterrupt:
   print("\n user stop the program")
 

@@ -1,9 +1,8 @@
 /*!
- * @file enrollUser.ino
- * @brief Example of face or palm user enrollment
- * @details This example performs user enrollment every time the board is reset,
- * @n and prints the enrollment result through the serial port
- * @n Enrollment should work normally as long as the connection is correct
+ * @file sen0736Recognition.ino
+ * @brief Continuous automatic user recognition routine on Raspberry Pi 2/3/4 (pyserial).
+ * @details This routine periodically detects faces, automatically recognizes them
+ * @n and prints user details via the serial port.
  * @copyright Copyright (c) 2026 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license The MIT License (MIT)
  * @author [Olive](feng.yang@dfrobot.com)
@@ -61,54 +60,46 @@ void setup()
 
   Serial.begin(115200);    //Start serial 1, for information printing
   delay(200);              //Wait for module to start
-  Serial.println("------------------------------------------------");
-  while (face.checkState() == false) {    //Determine whether the module is ready
-    Serial.println("Module not ready!");
-    delay(200);
-  }
-  Serial.println("Module ready!");
-  int8_t result = 0;
-  //Initialize user information
-  uint16_t                       id;
-  char                           name[]    = "Lebron James";
-  DFRobot_Biometric::eUserKind_t userKind  = face.ePalmUser;      //choose the user kind
-  DFRobot_Biometric::eIsAdmin_t  userclass = face.eRoleNormal;    //choose the class of user,normal user or adminer
-
-  Serial.println("Start user enrollment");
-  result = face.enrollUser(userKind, name, &id, userclass);
-  //Determine the execution result
-  if (result == 1) {
-    Serial.println("Successful enrollment!");
-    Serial.print("the user id is:");
-    Serial.println(id);
-    Serial.print("the user name is:");
-    Serial.println(name);
-    Serial.print("the user kind is:");
-    if (userKind == face.eFaceUser) {
-      Serial.println("face user");
-    } else if (userKind == face.ePalmUser) {
-      Serial.println("palm user");
-    }
-    Serial.print("the userClass is:");
-    if (userclass == face.eRoleNormal) {
-      Serial.println("Normal user");
-    } else if (userclass == face.eRoleAdmin) {
-      Serial.println("Adminer");
-    }
-  } else if (result == 2) {
-    Serial.println("User already exists");
-  } else if (result == 3) {
-    Serial.println("Enrollment timeout");
-  } else if (result == NO_ACK) {
-    Serial.println("No response from module");
-  } else if (result == ERROR) {
-    Serial.println("Parameter range error");
-  }
-  Serial.println("------------------------------------------------");
-  Serial.println("");
 }
 
 void loop()
 {
-  delay(2000);
+  // put your main code here, to run repeatedly:
+  while (face.checkState() == false) {    //Determine whether the module is ready
+    Serial.println("Module not ready !");
+  }
+  Serial.println("Module ready!");
+  Serial.println("------------------------------------------------");
+  DFRobot_Biometric::sId_t user   = { 0, DFRobot_Biometric::eFaceUser, DFRobot_Biometric::eRoleNormal, { 0 } };    //Store the recognized user information
+  int8_t                   result = 0;
+  result                          = face.getRecognitionResult(&user);
+  //Determine the execution result
+  if (result == 1) {
+    Serial.println("Success! The imformation of the user:");
+    Serial.print("id:");
+    Serial.println(user.id);
+    Serial.print("userName:");
+    Serial.println(user.userName);
+    Serial.print("user kind:");
+    if (user.kind == face.eFaceUser) {
+      Serial.println("face user");
+    } else if (user.kind == face.ePalmUser) {
+      Serial.println("palm user");
+    }
+    Serial.print("userClass:");
+    if (user.isAdmin == face.eRoleNormal) {
+      Serial.println("Normal user");
+    } else if (user.isAdmin == face.eRoleAdmin) {
+      Serial.println("Adminer");
+    }
+  } else if (result == 2) {
+    Serial.println("time out");
+  } else if (result == NO_ACK) {
+    Serial.println("No response from module");
+  } else if (result == 3) {
+    Serial.println("not found");
+  }
+  Serial.println("------------------------------------------------");
+  Serial.println("");
+  delay(10000);
 }

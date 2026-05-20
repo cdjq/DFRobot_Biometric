@@ -12,7 +12,7 @@ The Biometric library provides a unified encapsulation of the functions for thes
 ![Product Image](./resources/images/SEN0737.png)
 
 
-## Product Link (Link to DFRobot store)
+## Product Link (www.dfrobot.com)
     SKU: SEN0736 FP001 and SEN0737 FP002 Face and Palm Vein Recognition Modules
 
 ## Table of Contents
@@ -36,60 +36,65 @@ To use this library, first download the library file, paste it into the \Arduino
 
 ```C++
   /**
-   * @fn begin
-   * @brief Check whether the module is ready and idle
-   * @details Detailed description (optional for simple functions)
-   * @param None
+   * @fn checkState
+   * @brief Check if the module is ready and idle
    * @return bool type
-   * @retval true ready
-   * @retval false not ready
-   * @note Can be used before initialization or command execution to check status
-   * @attention (optional)
+   * @retval true Module is ready
+   * @retval false Module is not ready
+   * @note Use checkState() to check status before initialization or executing commands
    */
-  bool begin(void);
+  bool checkState(void);
 
   /**
    * @fn enrollUser
-   * @brief Enroll a face or palm vein user
-   * @details Detailed description (optional)
-   * @param kind FACE_USER for face enrollment, PALM_USER for palm vein enrollment
-   * @param userName User name string, length 1~32
-   * @param id Pointer to store the assigned user ID (optional)
-   * @param idAdmin Administrator flag (eIsAdmin_t)
+   * @brief Enroll face or palm for recognition
+   * @details Ensure that the parameters meet the requirements.
+   * @param kind eFaceUser for face enrollment, eFaceUser for palm enrollment
+   * @param userName User name, length 1 to 32 characters
+   * @param id Store the enrolled user ID, range 1 to800
+   * @param idAdmin Set user role, eRoleAdmin for administrator, eRoleNormal
    * @return Task execution result
-   * @retval NO_ACK -1 No response from main module
-   * @retval ERROR -2 User name too long or kind is not exist
+   * @retval NO_ACK -1 No response from module
+   * @retval ERROR  -2 User parameter error, such as invalid user type or name length
    * @retval 1 Success
    * @retval 2 Duplicate
    * @retval 3 Enrollment timeout
    */
-  int8_t enrollUser(uint8_t kind, const char* userName, uint16_t* id, eIsAdmin_t idAdmin);
+  int8_t enrollUser(eUserKind_t kind, const char* userName, uint16_t* id, eIsAdmin_t idAdmin);
 
   /**
    * @fn getAllNumsFaceUserIDs
-   * @brief Get the total number of enrolled face users
-   * @details Detailed description (optional)
+   * @brief Get the number of face users
    * @return Number of face users
-   * @retval NO_ACK -1 No response from main module
+   * @retval NO_ACK -1 No response from module
    */
   int16_t getAllNumsFaceUserIDs(void);
 
   /**
    * @fn getAllNumsPalmUserIDs
-   * @brief Get the total number of enrolled palm vein users
-   * @details Detailed description (optional)
-   * @return Number of palm vein users
-   * @retval NO_ACK -1 No response from main module
+   * @brief Get the number of palm users
+   * @return Number of palm users
+   * @retval NO_ACK -1 No response from module
    */
   int16_t getAllNumsPalmUserIDs(void);
 
   /**
+   * @fn getAllFaceUserIDs
+   * @brief Retrieve the specific information of the face user
+   * @param id_buffer store the specific information of the face user
+   * @param length the length of the id_buffer
+   * @return result
+   * @retval NO_ACK -1 No response from module
+   * @retval ERROR  -2 User parameter error:The length of the incoming array is less than the number of users.
+   */
+  int8_t getAllFaceUserIDs(uint16_t *id_buffer,uint16_t length);
+
+  /**
    * @fn getRecognitionResult
-   * @brief Recognize a user
-   * @details Detailed description (optional)
-   * @param ID Pointer to store the recognized user information (sId_t type)
+   * @brief Recognize the user
+   * @param ID Store the recognized user information
    * @return Execution result
-   * @retval NO_ACK -1 No response from main module
+   * @retval NO_ACK -1 No response from module
    * @retval 1 Success
    * @retval 2 Timeout
    * @retval 3 User not found
@@ -98,13 +103,13 @@ To use this library, first download the library file, paste it into the \Arduino
 
   /**
    * @fn deleteUser
-   * @brief Delete a specified user by ID
-   * @details Detailed description (optional)
-   * @param id User ID, range 1~800
-   * @return Deletion result
-   * @retval NO_ACK -1 No response from main module
-   * @retval ERROR -2 ID out of range (1~800)
-   * @retval 1 Deletion successful
+   * @brief Delete specified user
+   * @details The ID must fall within the valid range
+   * @param id User ID, range 1 to 800
+   * @return Delete result
+   * @retval NO_ACK -1 No response from module
+   * @retval ERROR  -2 ID out of range 1 to 800
+   * @retval 1 Delete success
    * @retval 2 User not found
    * @retval 3 Unknown error, suggest retry
    */
@@ -113,10 +118,9 @@ To use this library, first download the library file, paste it into the \Arduino
   /**
    * @fn deleteAllUser
    * @brief Delete all users
-   * @details Detailed description (optional)
-   * @return Deletion result
-   * @retval NO_ACK -1 No response from main module
-   * @retval 1 Deletion successful
+   * @return Delete result
+   * @retval NO_ACK -1 No response from module ,ERROR  -2 User parameter error
+   * @retval 1 Delete success
    * @retval 2 Unknown error, suggest retry
    */
   int8_t deleteAllUser(void);
@@ -124,12 +128,12 @@ To use this library, first download the library file, paste it into the \Arduino
   /**
    * @fn ledColor
    * @brief Control LED status
-   * @details Detailed description (optional)
+   * @details Ensure that the parameters meet the requirements
    * @param color LED color: COLOR_GREEN green, COLOR_RED red, COLOR_WHITE white
    * @param kind LED_ON turn on, LED_OFF turn off
    * @return Execution result
-   * @retval NO_ACK -1 No response from main module
-   * @retval ERROR -2 Invalid kind parameter
+   * @retval NO_ACK -1 No response from module
+   * @retval ERROR -2 Invalid kind or color parameter
    * @retval 1 Success
    */
   int8_t ledColor(uint8_t color, uint8_t kind);

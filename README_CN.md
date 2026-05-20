@@ -13,7 +13,7 @@ Biometric库是对于这两个模块的功能进行统一的封装，FP002比FP0
 ![产品效果图片](./resources/images/SEN0737.png)
 
 
-## 产品链接（链接到中文商城）
+## 产品链接 (www.dfrobot.com)
 
     SKU：SEN0736 FP001和SEN0737FP002人脸与掌静脉识别模块
 
@@ -38,7 +38,7 @@ Biometric库是对于这两个模块的功能进行统一的封装，FP002比FP0
 
 ```C++
   /**
-   * @fn check_state
+   * @fn checkState
    * @brief 确认模块是否就绪,是否空闲
    * @details 函数细节描述(简单函数可以不需要)
    * @param None (无，可以不需要)
@@ -48,7 +48,7 @@ Biometric库是对于这两个模块的功能进行统一的封装，FP002比FP0
    * @note 初始化或则执行某项命令前可以用check_state()函数检查状态
    * @attention 注意事项(没有可不需要)
    */
-  bool check_state(void);
+  bool checkState(void);
 
   /**
    * @fn enrollUser
@@ -57,7 +57,7 @@ Biometric库是对于这两个模块的功能进行统一的封装，FP002比FP0
    * @param kind FACE_USER表示进行人脸识别，PALM_USER表示进行掌静脉识别
    * @param userName  用户名称,字符长度为1~32
    * @return 返回任务执行结果
-   * @retval NO_ACK -1 主模块无反应
+   * @retval NO_ACK -1 没有收到模块的reply指令
    * @retval ERROR  -2用户名字符串过长或传入了不存在的人脸参数
    * @retval 1 表示成功
    * @retval 2 表示重复
@@ -70,7 +70,7 @@ Biometric库是对于这两个模块的功能进行统一的封装，FP002比FP0
    * @brief 获取人脸用户的数量
    * @details 函数细节描述(简单函数可以不需要)
    * @return 人脸用户的数量
-   * @retval  NO_ACK -1表示模块无反应
+   * @retval  NO_ACK -1 没有收到模块的reply指令
    */
   int16_t getAllNumsFaceUserIDs(void);
 
@@ -79,9 +79,20 @@ Biometric库是对于这两个模块的功能进行统一的封装，FP002比FP0
    * @brief 获取掌静脉用户的数量
    * @details 函数细节描述(简单函数可以不需要)
    * @return 掌静脉用户的数量
-   * @retval NO_ACK -1 表示主模块无反应
+   * @retval NO_ACK -1 没有收到模块的reply指令
    */
   int16_t getAllNumsPalmUserIDs(void);
+
+  /**
+   * @fn getAllFaceUserIDs
+   * @brief 获取具体有哪些人脸用户
+   * @param id_buffer 存储人脸用户id的数组
+   * @param length 传入的数组的长度
+   * @return result
+   * @retval NO_ACK -1 没有收到模块的reply指令
+   * @retval ERROR  -2 传入的参数错误，比如传入的数组长度不足以存储所有id
+   */
+  int8_t getAllFaceUserIDs(uint16_t *id_buffer,uint16_t length);
 
   /**
    * @fn getRecognitionResult
@@ -89,7 +100,7 @@ Biometric库是对于这两个模块的功能进行统一的封装，FP002比FP0
    * @details 函数细节描述(简单函数可以不需要)
    * @param ID 存放识别到的用户信息
    * @return 执行结果
-   * @retval NO_ACK -1 表示主模块无反应
+   * @retval NO_ACK -1 没有收到模块的reply指令
    * @retval 1 执行成功
    * @retval 2 超时
    * @retval 3 无此用户
@@ -102,7 +113,7 @@ Biometric库是对于这两个模块的功能进行统一的封装，FP002比FP0
    * @details 函数细节描述(简单函数可以不需要)
    * @param  id 用户的id号，范围1~800
    * @return 删除结果
-   * @retval NO_ACK -1 主模块无反应
+   * @retval NO_ACK -1 没有收到模块的reply指令
    * @retval ERROR  -2  ID超出1~800的范围
    * @retval 1 删除成功
    * @retval 2 无指定用户
@@ -115,7 +126,7 @@ Biometric库是对于这两个模块的功能进行统一的封装，FP002比FP0
    * @brief 删除所有用户
    * @details 函数细节描述(简单函数可以不需要)
    * @return 删除结果
-   * @retval NO_ACK -1 主模块无反应
+   * @retval NO_ACK -1 没有收到模块的reply指令
    * @retval 1 删除成功
    * @retval 2 未知错误，建议再次删除
    */
@@ -128,7 +139,7 @@ Biometric库是对于这两个模块的功能进行统一的封装，FP002比FP0
    * @param color 灯的颜色，COLOR_GREEN 绿灯，COLOR_RED 红灯，COLOR_WHITE 白灯
    * @param kind LED_ON 开灯，LED_OFF 关灯
    * @return 执行结果
-   * @retval NO_ACK -1 表示主模块无反应
+   * @retval NO_ACK -1 没有收到模块的reply指令
    * @retval ERROR -2 kind或color参数无效
    * @retval 1 执行成功
    */

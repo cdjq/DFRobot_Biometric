@@ -70,6 +70,15 @@ python enrollUser.py
   def get_all_nums_face_user_ids(self):
 
   '''!
+      @brief 获取人脸用户的具体id信息
+      @param id_buffer 存储id信息的数组
+      @param length 用户传入的数组长度
+      @return int RESULT_OK 成功, ERROR 数组太小, NO_ACK 主模块未回应
+    '''
+  def get_all_face_user_ids(self, id_buffer, length):
+
+
+  '''!
       @brief 录入人脸或掌静脉用户
       @param kind FACE_USER 或 PALM_USER
       @param user_name str 1~32 个字符

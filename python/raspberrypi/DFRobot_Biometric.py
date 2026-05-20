@@ -14,7 +14,7 @@
 import time
 
 
-def __wire_xor_checksum_inplace(data, length):
+def wire_xor_checksum_inplace(data, length):
   '''!
   @brief Same XOR rule as DFRobot_Biometric.__calculate_checksum (module-level for tests / REPL).
   @details XOR bytes from index 2 through length-2, result written to data[length-1].
@@ -52,11 +52,12 @@ class DFRobot_Biometric:
 
   ## NO_ACK means no response received
   NO_ACK = -1
+  ## The parameter passed to the function does not meet the requirements
   ERROR = -2
 
   ## User kinds
-  FACE_USER = 0x01
-  PALM_USER = 0x02
+  FACE_USER = 0x01  ## Face user
+  PALM_USER = 0x02  ## Palm user
 
   ## Two User roles:
   ## common user
@@ -65,28 +66,34 @@ class DFRobot_Biometric:
   ROLE_ADMIN = 1
 
   ## LED colors and states
-  COLOR_GREEN = 0x00
-  COLOR_RED = 0x01
-  COLOR_WHITE = 0x02
-  LED_OFF = 0x01
-  LED_ON = 0x00
+  COLOR_GREEN = 0x00  ## Green light
+  COLOR_RED = 0x01  ## Red light
+  COLOR_WHITE = 0x02  ## White light
+  LED_OFF = 0x01  ## Turn off LED
+  LED_ON = 0x00  ## Turn on LED
 
-  ## Check status command (same bytes as CMD_BEGIN in C header)
+  ## Check status command
   __CMD_BEGIN = bytes([0xEF, 0xAA, 0x11, 0x00, 0x00, 0x11])
+  ## Get face user count command
   __CMD_GET_FACE_USER_NUMS = bytes([0xEF, 0xAA, 0x24, 0x00, 0x01, 0x01, 0x24])
+  ## Get palm user count command
   __CMD_GET_PALM_USER_NUMS = bytes([0xEF, 0xAA, 0x24, 0x00, 0x01, 0x02, 0x27])
+  ## Get specific information of the face user command
+  __CMD_GET_FACE_USER_SPECIFIC = bytes([0xEF, 0xAA, 0x24, 0x00, 0x01, 0x00, 0x25])
+  ## Delete all users command
   __CMD_DELETE_ALL_USER = bytes([0xEF, 0xAA, 0x21, 0x00, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x24])
+  ## Identify user command
   __CMD_IDENTIFY_USER = bytes([0xEF, 0xAA, 0x12, 0x00, 0x02, 0x00, 0x0A, 0x1A])
 
-  __STATUS_STANDBY = 0x00
-  __STATUS_BUSY = 0x01
-  __STATUS_ERROR = 0x02
+  __STATUS_STANDBY = 0x00  ## Standby status
+  __STATUS_BUSY = 0x01  ## Busy status
+  __STATUS_ERROR = 0x02  ## Error status
 
-  __RESULT_OK = 0x00
-  __RESULT_TIMEOUT = 0x0D
-  __RESULT_REPEAT = 0x0A
-  __RESULT_NOT_FOUND = 0x08
-  __RESULT_UNKONW_ERR = 0x05
+  __RESULT_OK = 0x00  ## Command executed successfully
+  __RESULT_TIMEOUT = 0x0D  ## Command execution timeout
+  __RESULT_REPEAT = 0x0A  ## Face already enrolled
+  __RESULT_NOT_FOUND = 0x08  ## User not found
+  __RESULT_UNKONW_ERR = 0x05  ## Unknown error occurred
 
   def __init__(self, port='/dev/serial0', baudrate=115200, timeout=0, serial_instance=None):
     '''!
@@ -128,7 +135,7 @@ class DFRobot_Biometric:
     @brief Get number of face users
     @return int Count on success
     @retval nums>0 collect Number of face users
-    @retval NO_ACK no response
+    @retval NO_ACK -1 no response
     '''
     data = bytearray(self.__CMD_GET_FACE_USER_NUMS)
     buffer = bytearray(250)
@@ -143,7 +150,7 @@ class DFRobot_Biometric:
     @brief Get number of palm users
     @return int Count on success
     @retval nums>0 collect Number of palm users
-    @retval NO_ACK no response
+    @retval NO_ACK -1 no response
     '''
     data = bytearray(self.__CMD_GET_PALM_USER_NUMS)
     buffer = bytearray(250)
@@ -151,6 +158,25 @@ class DFRobot_Biometric:
     if state is True:
       nums = buffer[7] * 256 + buffer[8]
       return nums
+    return self.NO_ACK
+
+  def get_all_face_user_ids(self, id_buffer, length):
+    '''!
+    @brief Get specific face user IDs
+    @param id_buffer writable sequence to receive face IDs
+    @param length int Maximum number of IDs the buffer can hold
+    @return int RESULT_OK on success, ERROR -2 when buffer is too small, NO_ACK no response
+    '''
+    data = bytearray(self.__CMD_GET_FACE_USER_SPECIFIC)
+    buffer = bytearray(250)
+    state = self.__write_cmd(data, 7, buffer, 3000)
+    if state is True:
+      user_nums = buffer[7] * 256 + buffer[8]
+      if length < user_nums:
+        return self.ERROR
+      for i in range(user_nums):
+        id_buffer[i] = buffer[9 + i * 2] * 256 + buffer[9 + i * 2 + 1]
+      return self.__RESULT_OK
     return self.NO_ACK
 
   def enroll_user(self, kind, user_name, is_admin):
@@ -321,7 +347,7 @@ class DFRobot_Biometric:
       pass
 
   def __calculate_checksum(self, data, length):
-    __wire_xor_checksum_inplace(data, length)
+    wire_xor_checksum_inplace(data, length)
 
   def __millis(self):
     return int(time.monotonic() * 1000)
@@ -376,3 +402,7 @@ class DFRobot_Biometric:
     self.__ser.write(bytes(data[0:length]))
     state = self.__wait_for_reply(buffer, out_time_ms)
     return state
+
+
+# if __name__ == '__main__':
+#   main()

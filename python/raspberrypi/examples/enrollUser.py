@@ -18,23 +18,39 @@ from DFRobot_Biometric import DFRobot_Biometric, SId
 
 if __name__ == "__main__":
   try:
-    ser = serial.Serial(port='/dev/ttyAMA3', baudrate=115200, timeout=0.5)
+    ser = serial.Serial(port='/dev/ttyAMA3', baudrate=115200, timeout=0.5)  # Initialize the serial port for printing information
     ser.write(b"serial start:\r\n")
   except Exception as e:
     ser.write(b"serial fail:: {e}\r\n")
     exit()
 
-  bio = DFRobot_Biometric(port='/dev/serial0', baudrate=115200)
+  bio = DFRobot_Biometric(port='/dev/serial0', baudrate=115200)  # Initialize the class object and pass in a serial port
   try:
+    ser.write(b"------------------------------------------------\r\n")
     ser.write(b"Start connect Module...\r\n")
+    # Determine whether the module is ready
     while not bio.check_state():
       ser.write(b"Connection Module Fail\r\n")
     ser.write(b" Module is ready\r\n")
-    ser.write(b"Starting to enroll face:\r\n")
-    result, id = bio.enroll_user(bio.FACE_USER, "zwjhy", bio.ROLE_NORMAL)
+    ser.write(b"Starting to enroll:\r\n")
+    # Initialize the registered user information
+    user_kind = bio.PALM_USER
+    name = "zwjhy"
+    kind_class = bio.ROLE_NORMAL
+
+    result, id = bio.enroll_user(user_kind, name, kind_class)
     if result == 1:
-      ser.write(b"enroll success\r\n")
-      ser.write(f"the id is:{id}\r\n".encode())
+      ser.write(b"enroll success !\r\n")
+      ser.write(f"the id is: {id}\r\n".encode())
+      ser.write(f"the name is: {name}\r\n".encode())
+      if user_kind == bio.PALM_USER:
+        ser.write(b"the user kind is : PALM\r\n")
+      else:
+        ser.write(b"the user kind is : FACE\r\n")
+      if kind_class == bio.ROLE_NORMAL:
+        ser.write(b"the user class is : NORMAL USER\r\n")
+      elif kind_class == bio.ROLE_ADMIN:
+        ser.write(b"the user class is : ADMINER\r\n")
     elif result == 2:
       ser.write(b"face duplicate\r\n")
     elif result == 3:
@@ -43,7 +59,9 @@ if __name__ == "__main__":
       ser.write(b"parameter error\r\n")
     else:
       ser.write(b"Unknown error\r\n")
-      time.sleep(2)
+    ser.write(b"------------------------------------------------\r\n")
+    ser.write(b"\r\n")
+    time.sleep(2)
   except KeyboardInterrupt:
     print("\n user stop the program")
 

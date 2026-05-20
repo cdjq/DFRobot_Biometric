@@ -17,24 +17,26 @@ from DFRobot_Biometric import DFRobot_Biometric, SId
 
 if __name__ == "__main__":
   try:
-    ser = serial.Serial(port='/dev/ttyAMA3', baudrate=115200, timeout=0.5)
+    ser = serial.Serial(port='/dev/ttyAMA3', baudrate=115200, timeout=0.5)  # Initialize the serial port for printing information
     ser.write(b"serial start:\r\n")
   except Exception as e:
     ser.write(b"serial fail:: {e}\r\n")
     exit()
 
-  bio = DFRobot_Biometric(port='/dev/serial0', baudrate=115200)
+  bio = DFRobot_Biometric(port='/dev/serial0', baudrate=115200)  # Initialize the class object and pass in a serial port
   try:
     while True:
+      ser.write(b"------------------------------------------------\r\n")
       ser.write(b"Start connect Module...\r\n")
+      # Determine whether the module is ready
       while not bio.check_state():
         ser.write(b"Connection Module Fail\r\n")
       ser.write(b" Module is ready\r\n")
-      my_sid = SId()
+      my_sid = SId()  # Create an SId object to store the recognition result
       result = bio.get_recognition_result(my_sid)
       if result == 1:
         ser.write(b"Recognition successful\r\n")
-        ser.write(f"the id is:{my_sid}\r\n".encode())
+        ser.write(f"the imformation of user:   {my_sid}\r\n".encode())
       elif result == 2:
         ser.write(b"Recognition timeout\r\n")
       elif result == 3:
@@ -43,6 +45,8 @@ if __name__ == "__main__":
         ser.write(b"parameter error\r\n")
       else:
         ser.write(b"Unknown error\r\n")
+      ser.write(b"------------------------------------------------\r\n")
+      ser.write(b"\r\n")
       time.sleep(10)
   except KeyboardInterrupt:
     print("\n user stop the program")
